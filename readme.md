@@ -6,9 +6,9 @@ $ node src/index.js
 ```
 
 # Screenshots
-!(/screenshots/1.png)
-!(/screenshots/2.png)
-!(/screenshots/3.png)
+![Movie selection](https://raw.githubusercontent.com/ragamo/peliscli/master/screenshots/1.png)
+![Fetching movie data](https://raw.githubusercontent.com/ragamo/peliscli/master/screenshots/2.png)
+![Quality selection](https://raw.githubusercontent.com/ragamo/peliscli/master/screenshots/3.png)
 
 # Disclaimer
 Work in progress.
