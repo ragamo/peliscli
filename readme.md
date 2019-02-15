@@ -1,4 +1,4 @@
-# Pelispedia CLI browser and launcher
+# Pelispedia CLI browser and VLC launcher
 
 ```javascript
 $ npm install

@@ -13,14 +13,11 @@
 
 	<script>
 		var video = document.querySelector('#player');
-		video.addEventListener('loadstart', function() {
-			console.log('Start');
-		});
-
 		video.addEventListener('canplay', function(e) {
-			console.log('OK');
 			e.target.pause();
-			e.target.play().then(e => console.log(e)).catch(err => console.log(err));		
+			e.target.play()
+				.then(e => console.log(e))
+				.catch(err => console.log(err));		
 		});
 	</script>
 

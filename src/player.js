@@ -1,11 +1,35 @@
 module.exports = new class Player {
 
 	constructor() {
-		//this.launchPlayer('https://video-downloads.googleusercontent.com/AHSG-TiE_G7D9lmZD30J6nyuV7hURCMWeazSb0GT8tLfK-IQ0UVwFUhXTZbYUqyZa1QQM5Pd6wL2tRKb-fZmJrW0RoSGLpcxG9HqP2Nil7CK5pqa0IlpjMT95dAuahdYSFlQ16CNYbWf_HgwXDwBw_--_D4Nc7OnWOxdW9kUviIxpLTblYVtg9QLnhwjD-GPGBQMjFY5YLce','https://pelispedia.video/sub/Sabrina.2018-vtt.vtt');
+		//this.launchPlayer('https://video-downloads.googleusercontent.com/AHSG-Tio35bdqGNcTnx77ihtG-TbdLO29kOKkBG8XsNzzk9J9YFvBVxU08xtFFHJ26uFGJKDzqHZhVwCwPD974gu5YgGcHaZo4rYEon1xMCPuAdL2txWnK7bDCp9uP1lBUWnE__FWDXd9gYl6Aeab0IJBhVfCi8LdN5vDtINFVUA8zq-mMkMqVVfPm4SHyZ7QfrFhXmVWbMd','https://pelispedia.video/sub/Operation.Red.Sea.2018-vtt.vtt')
 		//this.startMicroServer()
 	}
 
 	async launchPlayer(url, srt) {
+		const http = require('https');
+		const fs = require('fs');
+		const { spawn } = require('child_process');
+
+		await http.get(srt, res => {
+			let data = '';
+			res.on('data', (chunk) => { data += chunk; });
+			res.on('end', () => {
+				fs.writeFileSync('public/sub.vtt', data, 'utf-8');
+			});
+		});
+
+		let vlc = spawn('/Applications/VLC.app/Contents/MacOS/VLC', [url,'--sub-file='+__dirname+'/../public/sub.vtt']);
+		vlc.stdout.on('data', (data) => {
+			console.log(`stdout: ${data}`);
+		});
+
+		vlc.stderr.on('data', (data) => {
+			console.log(`stderr: ${data}`);
+		});
+
+	}
+
+	async launchWebPlayer(url, srt) {
 		await this.startMicroServer(url, srt);
 
 		const puppeteer = require('puppeteer');

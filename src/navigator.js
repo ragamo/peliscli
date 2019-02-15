@@ -56,10 +56,19 @@ module.exports = new class Navigator {
 
 		const browser = await puppeteer.launch({
 			headless: true,
-			slowMo: 250
+			//slowMo: 110
 		});
 
 		const page = await browser.newPage();
+		await page.setRequestInterception(true);
+		page.on('request', (request) => {
+			if(['image', 'stylesheet', 'font'].indexOf(request.resourceType()) !== -1) {
+				request.abort();
+			} else {
+				request.continue();
+			}
+		});
+
 		await page.goto(movie.url, {
 				waituntil: "networkidle0"
 		});
@@ -68,6 +77,11 @@ module.exports = new class Navigator {
 		});
 
 		await frame.click('#botones a:nth-child(2)');
+		await frame.waitForNavigation();
+
+		if(await !frame.$('.menuPlayer li:not(.bar)')) {
+			console.log(clc.white.bgRed('No mirrors found.'));
+		}
 
 		let mirrors = await frame.$$eval('.menuPlayer li:not(.bar)', elements => {
 			return elements.map((el,index) => {
@@ -89,6 +103,7 @@ module.exports = new class Navigator {
 
 		this.spinner.stop()
 		let mirrorIndex = await Menu.chooseMirror(mirrors);
+		console.log(mirrorIndex);
 
 		this.spinner.message('⚓️ Getting link...');
 		this.spinner.start();
